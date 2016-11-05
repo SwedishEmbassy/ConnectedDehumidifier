@@ -1,6 +1,6 @@
 const int buttonPin = 3;
-const int ledOnPin = A0;
-const int ledFullPin = A1;
+const int onPin = A0;
+const int fullPin = A1;
 
 bool isOn = false;
 bool isFull = false;
@@ -61,7 +61,7 @@ void togglePower() {
 }
 
 bool readOnState() {  
-  int value = analogRead(ledOnPin);
+  int value = analogRead(onPin);
   float voltage = convertValueToVoltage(value);
 
   if(voltage > 4.5) {
@@ -72,7 +72,7 @@ bool readOnState() {
 }
 
 bool readFullState() {  
-  int value = analogRead(ledFullPin);
+  int value = analogRead(fullPin);
   float voltage = convertValueToVoltage(value);
 
   if(voltage > 4.5) {
