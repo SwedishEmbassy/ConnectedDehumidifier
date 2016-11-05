@@ -1,18 +1,49 @@
-const int buttonPin = 2;
+const int buttonPin = 3;
 const int ledOnPin = A0;
-const int ledFullPin = A1;
+const int ledFullPin = A5;
+
+int isOn = 0;
+int isFull = 0;
+
+int isOnUpdated = false;
+int isFullUpdated = false;
+
+int toggleOn(String extra);
+int readOn(String extra);
+int readFull(String extra);
 
 void setup() {
-  // Set button pin to HIGH immediately, otherwise humidifier toggles state on start.
   pinMode(buttonPin, OUTPUT);
   digitalWrite(buttonPin, HIGH);
-  
-  Serial.begin(9600);
+
+  Particle.variable("isOn", isOn);
+  Particle.variable("isFull", isFull);
+
+  Particle.function("toggleOn", toggleOn);
+  Particle.function("readOn", readOn);
+  Particle.function("readFull", readFull);
 }
 
-void toggleOn() {
+void loop() {
+  int readIsOn = readOn("");
+  int readIsFull = readFull("");
+
+  if(readIsOn != isOn || !isOnUpdated) {
+      isOn = readIsOn;
+      isOnUpdated = Particle.publish("isOnChanged", String(readIsOn), 60, PRIVATE);
+  }
+
+  if(readIsFull != isFull || !isFullUpdated) {
+      isFull = readIsFull;
+      isFullUpdated = Particle.publish("isFullChanged", String(readIsFull), 60, PRIVATE);
+  }
+
+  delay(1000);
+}
+
+int toggleOn(String extra) {
   Serial.println("Toggling power for Humidifier.");
-  
+
   // Fake user holding down button.
   digitalWrite(buttonPin, LOW);
   Serial.println("Faked LOW");
@@ -23,43 +54,37 @@ void toggleOn() {
   Serial.println("Faked HIGH");
 
   Serial.println("Power toggled.");
+
+  return 1;
 }
 
-void loop() {
-  readOnState();
-  readFullState();
-  Serial.println();
-  delay(1000);
-}
-
-void readOnState() {  
+int readOn(String extra) {
   int value = analogRead(ledOnPin);
   float voltage = convertValueToVoltage(value);
-  Serial.println("On: ");
-  Serial.println(value);
-  Serial.println(voltage);
 
   if(voltage > 4.5) {
     Serial.println("Humidifier is OFF");
+    return 0;
   } else {
     Serial.println("Humidifier is ON");
+    return 1;
   }
 }
 
-void readFullState() {  
+int readFull(String extra) {
   int value = analogRead(ledFullPin);
   float voltage = convertValueToVoltage(value);
-  Serial.println("Full: ");
-  Serial.println(value);
-  Serial.println(voltage);
 
   if(voltage > 4.5) {
     Serial.println("Humidifier is NOT FULL");
+    return 0;
   } else {
     Serial.println("Humidifier is FULL");
+    return 1;
   }
 }
 
 float convertValueToVoltage(int value) {
   return value * (5.0 / 1023.0);
 }
+
