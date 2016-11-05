@@ -35,7 +35,10 @@ void loop() {
 void readOnState() {  
   int value = analogRead(ledOnPin);
   float voltage = convertValueToVoltage(value);
-  
+  Serial.println("On: ");
+  Serial.println(value);
+  Serial.println(voltage);
+
   if(voltage > 4.5) {
     Serial.println("Humidifier is OFF");
   } else {
@@ -46,7 +49,10 @@ void readOnState() {
 void readFullState() {  
   int value = analogRead(ledFullPin);
   float voltage = convertValueToVoltage(value);
-  
+  Serial.println("Full: ");
+  Serial.println(value);
+  Serial.println(voltage);
+
   if(voltage > 4.5) {
     Serial.println("Humidifier is NOT FULL");
   } else {
