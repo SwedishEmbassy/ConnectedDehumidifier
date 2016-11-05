@@ -3,4 +3,4 @@ We bought a humidifier for our living space. But it's not connected to anything.
 
 ![](http://i.imgur.com/oHc91VB.jpg)
 ![](http://i.imgur.com/rNNoyPi.jpg)
-![](http://i.imgur.com/undefined.jpg)
+![](http://i.imgur.com/pcVaDGY.jpg)
